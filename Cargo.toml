@@ -1,0 +1,8 @@
+[package]
+name = "gubbygaming213"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ash = "0.30.0"
+winit = "0.30"

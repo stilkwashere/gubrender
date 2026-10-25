@@ -1,0 +1,12 @@
+/home/stilk/Projects/gubbygaming213/target/debug/deps/calloop-798cb88dc9e6c3fb.d: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/list.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/loop_logic.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/channel.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/generic.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/signals.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/timer.rs
+
+/home/stilk/Projects/gubbygaming213/target/debug/deps/libcalloop-798cb88dc9e6c3fb.rmeta: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/list.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/loop_logic.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/channel.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/generic.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/signals.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/timer.rs
+
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/lib.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/list.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/loop_logic.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/mod.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/channel.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/generic.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/signals.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/calloop-0.4.4/src/sources/timer.rs:

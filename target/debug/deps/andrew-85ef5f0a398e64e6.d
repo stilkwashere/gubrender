@@ -1,0 +1,12 @@
+/home/stilk/Projects/gubbygaming213/target/debug/deps/andrew-85ef5f0a398e64e6.d: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/line.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/rectangle.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/fontconfig.rs
+
+/home/stilk/Projects/gubbygaming213/target/debug/deps/libandrew-85ef5f0a398e64e6.rlib: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/line.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/rectangle.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/fontconfig.rs
+
+/home/stilk/Projects/gubbygaming213/target/debug/deps/libandrew-85ef5f0a398e64e6.rmeta: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/line.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/rectangle.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/fontconfig.rs
+
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/lib.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/line.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/mod.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/shapes/rectangle.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/mod.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/andrew-0.2.1/src/text/fontconfig.rs:
