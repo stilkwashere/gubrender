@@ -4,15 +4,14 @@ use ash::version::DeviceV1_0;
 use ash::version::EntryV1_0;
 use ash::version::InstanceV1_0;
 use ash::vk;
-
-use ash::vk::Queue;
-use winit::raw_window_handle::HasDisplayHandle;
-use winit::raw_window_handle::HasWindowHandle;
-use winit::raw_window_handle::RawDisplayHandle;
-use winit::raw_window_handle::RawWindowHandle;
-
-use winit::window::Window;
-
+use glfw::Context;
+use glfw::Key::D;
+use glfw::ffi::glfwTerminate;
+use raw_window_handle::RawDisplayHandle;
+use raw_window_handle::RawWindowHandle;
+use raw_window_handle::WaylandDisplayHandle;
+use raw_window_handle::WaylandWindowHandle;
+use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
 struct DebugDongXi {
     loader: ash::extensions::ext::DebugUtils,
     messenger: vk::DebugUtilsMessengerEXT
@@ -56,11 +55,12 @@ struct SurfaceDongXi {
 }
 
 impl SurfaceDongXi {
-    fn init(window: &winit::window::Window, entry: &ash::Entry, instance:&ash::Instance) -> Result<SurfaceDongXi, vk::Result> {
+
+    fn init(window: &glfw::PWindow, entry: &ash::Entry, instance:&ash::Instance) -> Result<SurfaceDongXi, vk::Result> {
         let display = window.display_handle().unwrap().as_raw();
         let handle = window.window_handle().unwrap().as_raw();
         let (display, surface) = match (display, handle){
-            (RawDisplayHandle::Wayland(d), RawWindowHandle::Wayland(w)) => (d.display.as_ptr(), w.surface.as_ptr()),
+            (RawDisplayHandle::Wayland(WaylandDisplayHandle { display, .. }), RawWindowHandle::Wayland(WaylandWindowHandle { surface,.. })) => (display.as_ptr(), surface.as_ptr()),
             _ => panic!("Not running on wayland")
         };
         let wl_create_info = vk::WaylandSurfaceCreateInfoKHR::builder()
@@ -282,8 +282,8 @@ impl Drop for SwapchainDongXi {
 
 
 
-struct Renderer {
-    window:winit::window::Window,
+struct Renderer<'a> {
+    window: &'a glfw::PWindow,
     entry: ash::Entry,
     instance: ash::Instance,
     debug: DebugDongXi,
@@ -297,10 +297,9 @@ struct Renderer {
 }
 
 
-impl Renderer {
-    fn init(window: winit::window::Window) -> Result<Renderer, Box<dyn std::error::Error>> {
+impl<'a> Renderer<'a> {
+    fn init(window: & 'a glfw::PWindow) -> Result<Renderer<'a>, Box<dyn std::error::Error>> {
         let entry = ash::Entry::new()?;
-
         let layer_names = vec!["VK_LAYER_KHRONOS_validation"];
         let instance = init_instance(&entry, &layer_names)?;
         let debug = DebugDongXi::init(&entry, &instance)?;
@@ -321,31 +320,54 @@ impl Renderer {
         )?;
         Ok(Renderer { window, entry, instance, debug,surfaces, physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain })
     }
+
+ 
 }
-impl Drop for Renderer {
+impl<'a> Drop for Renderer<'a> {
     fn drop(&mut self) {
         unsafe {
             self.swapchain.cleanup(&self.device);
             self.device.destroy_device(None);
             self.instance.destroy_instance(None);
+            
         };
     }
 }
 const WIDTH : u32 = 67;
 const HEIGHT : u32 = 68;
 
+
+
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let eventloop = winit::event_loop::EventLoop::new().unwrap();
-    let window = eventloop.create_window(Window::default_attributes())?;
-    let entry = ash::Entry::new()?;
-    let instance = init_instance(&entry, vec!["VK_LAYER_KHRONOS_validation"])?;
-    let debug_utils = ash::extensions::ext::DebugUtils::new(&entry, &instance);
-    let debug = DebugDongXi::init(&entry, &instance)?;
-    let phys_devs = unsafe { instance.enumerate_physical_devices()? };
+    use glfw::fail_on_errors;
+    let mut glfw = glfw::init(fail_on_errors!()).unwrap();
+    glfw.window_hint(glfw::WindowHint::ClientApi(glfw::ClientApiHint::NoApi));
+    glfw.window_hint(glfw::WindowHint::Resizable(false));
 
-    let renderer
+    let (mut window, events) = glfw.create_window(WIDTH, HEIGHT, "sideways stairs", glfw::WindowMode::Windowed).expect("errored window sory");   
+    window.make_current();
+    window.set_key_polling(true);
+      
 
-
+    while !window.should_close(){
+        window.swap_buffers();
+        glfw.poll_events();
+        for(_, event) in  glfw::flush_messages(&events){
+            match event {
+                glfw::WindowEvent::Key(glfw::Key::Escape, _ ,glfw::Action::Press, _) => {
+                    window.set_should_close(true);
+                },
+               
+                _ => {},
+            }
+        }
+            
+    }
+    unsafe {
+        glfwTerminate();
+    }
+  
     Ok(())
 }
 

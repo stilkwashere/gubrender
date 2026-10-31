@@ -1,0 +1,11 @@
+running: cd "/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build" && CMAKE_PREFIX_PATH="" LC_ALL="C" "cmake" "/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/./glfw" "-B" "/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build" "-DGLFW_BUILD_EXAMPLES=OFF" "-DGLFW_BUILD_TESTS=OFF" "-DGLFW_BUILD_DOCS=OFF" "-DCMAKE_INSTALL_LIBDIR=lib" "-DGLFW_BUILD_WAYLAND=ON" "-DGLFW_BUILD_X11=ON" "-DGLFW_LIBRARY_TYPE=STATIC" "-DCMAKE_INSTALL_PREFIX=/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out" "-DCMAKE_C_FLAGS= -ffunction-sections -fdata-sections -fPIC -m64 -w" "-DCMAKE_C_COMPILER=/usr/bin/cc" "-DCMAKE_CXX_FLAGS= -ffunction-sections -fdata-sections -fPIC -m64 -w" "-DCMAKE_CXX_COMPILER=/usr/bin/c++" "-DCMAKE_ASM_FLAGS= -ffunction-sections -fdata-sections -fPIC -m64 -w" "-DCMAKE_ASM_COMPILER=/usr/bin/cc" "-DCMAKE_BUILD_TYPE=Debug"
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_ASM_COMPILER
+    CMAKE_ASM_FLAGS
+    CMAKE_CXX_COMPILER
+    CMAKE_CXX_FLAGS
+
+
+running: cd "/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build" && LC_ALL="C" MAKEFLAGS="-j --jobserver-fds=6,7 --jobserver-auth=6,7" "cmake" "--build" "/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build" "--target" "install" "--config" "Debug"

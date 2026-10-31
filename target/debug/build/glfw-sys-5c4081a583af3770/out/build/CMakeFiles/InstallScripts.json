@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build/cmake_install.cmake",
+		"/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build/src/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

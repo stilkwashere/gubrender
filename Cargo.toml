@@ -5,4 +5,6 @@ edition = "2024"
 
 [dependencies]
 ash = "0.30.0"
-winit = "0.30"
+glfw = { version = "0.63.0", features = ["raw-window-handle-v0-6", "vulkan"] }
+raw-window-handle = "0.6.2"
+

@@ -1,0 +1,267 @@
+cargo:rerun-if-changed=build.rs
+cargo:rerun-if-env-changed=GLFW3_NO_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+cargo::warning=Failed to link against system GLFW. GLFW will be built instead.
+cargo:THIRD_PARTY=/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/glfw
+CMAKE_TOOLCHAIN_FILE_x86_64-unknown-linux-gnu = None
+CMAKE_TOOLCHAIN_FILE_x86_64_unknown_linux_gnu = None
+HOST_CMAKE_TOOLCHAIN_FILE = None
+CMAKE_TOOLCHAIN_FILE = None
+CMAKE_GENERATOR_x86_64-unknown-linux-gnu = None
+CMAKE_GENERATOR_x86_64_unknown_linux_gnu = None
+HOST_CMAKE_GENERATOR = None
+CMAKE_GENERATOR = None
+CMAKE_PREFIX_PATH_x86_64-unknown-linux-gnu = None
+CMAKE_PREFIX_PATH_x86_64_unknown_linux_gnu = None
+HOST_CMAKE_PREFIX_PATH = None
+CMAKE_PREFIX_PATH = None
+CMAKE_x86_64-unknown-linux-gnu = None
+CMAKE_x86_64_unknown_linux_gnu = None
+HOST_CMAKE = None
+CMAKE = None
+-- The C compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Including Wayland support
+-- Including X11 support
+-- Looking for memfd_create
+-- Looking for memfd_create - found
+-- Found PkgConfig: /usr/bin/pkg-config (found version "3.0.10")
+-- Checking for modules 'wayland-client>=0.2.7;wayland-cursor>=0.2.7;wayland-egl>=0.2.7;xkbcommon>=0.5.0'
+--   Found wayland-client, version 1.26.0
+--   Found wayland-cursor, version 1.26.0
+--   Found wayland-egl, version 18.1.0
+--   Found xkbcommon, version 1.13.2
+-- Found X11: /usr/include
+-- Looking for XOpenDisplay in /usr/lib/libX11.so;/usr/lib/libXext.so
+-- Looking for XOpenDisplay in /usr/lib/libX11.so;/usr/lib/libXext.so - found
+-- Looking for gethostbyname
+-- Looking for gethostbyname - found
+-- Looking for connect
+-- Looking for connect - found
+-- Looking for remove
+-- Looking for remove - found
+-- Looking for shmat
+-- Looking for shmat - found
+-- Looking for IceConnectionNumber in ICE
+-- Looking for IceConnectionNumber in ICE - found
+-- Configuring done (1.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/build
+[  2%] Generating idle-inhibit-unstable-v1-client-protocol.h
+[  4%] Generating fractional-scale-v1-client-protocol.h
+[  6%] Generating pointer-constraints-unstable-v1-client-protocol-code.h
+[  8%] Generating xdg-shell-client-protocol.h
+[ 11%] Generating pointer-constraints-unstable-v1-client-protocol.h
+[ 13%] Generating fractional-scale-v1-client-protocol-code.h
+[ 15%] Generating idle-inhibit-unstable-v1-client-protocol-code.h
+[ 17%] Generating relative-pointer-unstable-v1-client-protocol.h
+[ 20%] Generating relative-pointer-unstable-v1-client-protocol-code.h
+[ 22%] Generating viewporter-client-protocol.h
+[ 24%] Generating viewporter-client-protocol-code.h
+[ 28%] Generating wayland-client-protocol-code.h
+[ 28%] Generating wayland-client-protocol.h
+[ 31%] Generating xdg-activation-v1-client-protocol-code.h
+[ 33%] Generating xdg-activation-v1-client-protocol.h
+[ 37%] Generating xdg-decoration-unstable-v1-client-protocol.h
+[ 37%] Generating xdg-shell-client-protocol-code.h
+[ 40%] Generating xdg-decoration-unstable-v1-client-protocol-code.h
+[ 42%] Building C object src/CMakeFiles/glfw.dir/context.c.o
+[ 44%] Building C object src/CMakeFiles/glfw.dir/init.c.o
+[ 46%] Building C object src/CMakeFiles/glfw.dir/input.c.o
+[ 48%] Building C object src/CMakeFiles/glfw.dir/platform.c.o
+[ 51%] Building C object src/CMakeFiles/glfw.dir/monitor.c.o
+[ 53%] Building C object src/CMakeFiles/glfw.dir/vulkan.c.o
+[ 55%] Building C object src/CMakeFiles/glfw.dir/window.c.o
+[ 57%] Building C object src/CMakeFiles/glfw.dir/egl_context.c.o
+[ 60%] Building C object src/CMakeFiles/glfw.dir/osmesa_context.c.o
+[ 62%] Building C object src/CMakeFiles/glfw.dir/null_init.c.o
+[ 64%] Building C object src/CMakeFiles/glfw.dir/null_monitor.c.o
+[ 66%] Building C object src/CMakeFiles/glfw.dir/null_window.c.o
+[ 68%] Building C object src/CMakeFiles/glfw.dir/null_joystick.c.o
+[ 71%] Building C object src/CMakeFiles/glfw.dir/posix_module.c.o
+[ 73%] Building C object src/CMakeFiles/glfw.dir/posix_time.c.o
+[ 75%] Building C object src/CMakeFiles/glfw.dir/posix_thread.c.o
+[ 77%] Building C object src/CMakeFiles/glfw.dir/x11_init.c.o
+[ 80%] Building C object src/CMakeFiles/glfw.dir/x11_monitor.c.o
+[ 82%] Building C object src/CMakeFiles/glfw.dir/x11_window.c.o
+[ 84%] Building C object src/CMakeFiles/glfw.dir/xkb_unicode.c.o
+[ 86%] Building C object src/CMakeFiles/glfw.dir/glx_context.c.o
+[ 88%] Building C object src/CMakeFiles/glfw.dir/wl_init.c.o
+[ 91%] Building C object src/CMakeFiles/glfw.dir/wl_monitor.c.o
+[ 93%] Building C object src/CMakeFiles/glfw.dir/linux_joystick.c.o
+[ 95%] Building C object src/CMakeFiles/glfw.dir/wl_window.c.o
+[ 97%] Building C object src/CMakeFiles/glfw.dir/posix_poll.c.o
+[100%] Linking C static library libglfw3.a
+[100%] Built target glfw
+Install the project...
+-- Install configuration: "Debug"
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib/libglfw3.a
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/include/GLFW
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/include/GLFW/glfw3.h
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/include/GLFW/glfw3native.h
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib/cmake/glfw3/glfw3Config.cmake
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib/cmake/glfw3/glfw3ConfigVersion.cmake
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib/cmake/glfw3/glfw3Targets.cmake
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib/cmake/glfw3/glfw3Targets-debug.cmake
+-- Installing: /home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib/pkgconfig/glfw3.pc
+cargo:root=/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out
+cargo:rustc-link-search=native=/home/stilk/Projects/gubbygaming213/target/debug/build/glfw-sys-5c4081a583af3770/out/lib
+cargo:rustc-link-lib=static=glfw3
+cargo:rerun-if-env-changed=X11_NO_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG
+cargo:rerun-if-env-changed=X11_STATIC
+cargo:rerun-if-env-changed=X11_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=SYSROOT
+cargo:rerun-if-env-changed=X11_STATIC
+cargo:rerun-if-env-changed=X11_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+cargo:rustc-link-search=native=/usr/lib
+cargo:rustc-link-lib=X11
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG
+cargo:rerun-if-env-changed=X11_STATIC
+cargo:rerun-if-env-changed=X11_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+pkg-config x11 lib: Library {
+    libs: [
+        "X11",
+    ],
+    link_paths: [
+        "/usr/lib",
+    ],
+    link_files: [],
+    frameworks: [],
+    framework_paths: [],
+    include_paths: [
+        "/usr/include",
+    ],
+    ld_args: [],
+    defines: {},
+    version: "1.8.14",
+    _priv: (),
+}
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_NO_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_STATIC
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=SYSROOT
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_STATIC
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+cargo:rustc-link-search=native=/usr/lib
+cargo:rustc-link-lib=wayland-client
+cargo:rustc-link-lib=m
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+cargo:rerun-if-env-changed=PKG_CONFIG
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_STATIC
+cargo:rerun-if-env-changed=WAYLAND_CLIENT_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+pkg-config wayland-client lib: Library {
+    libs: [
+        "wayland-client",
+        "m",
+    ],
+    link_paths: [
+        "/usr/lib",
+    ],
+    link_files: [],
+    frameworks: [],
+    framework_paths: [],
+    include_paths: [
+        "/usr/include",
+    ],
+    ld_args: [],
+    defines: {},
+    version: "1.26.0",
+    _priv: (),
+}
