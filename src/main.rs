@@ -346,12 +346,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     glfw.window_hint(glfw::WindowHint::Resizable(false));
 
     let (mut window, events) = glfw.create_window(WIDTH, HEIGHT, "sideways stairs", glfw::WindowMode::Windowed).expect("errored window sory");   
-    window.make_current();
+   
     window.set_key_polling(true);
       
 
     while !window.should_close(){
-        window.swap_buffers();
+        println!("penis");
         glfw.poll_events();
         for(_, event) in  glfw::flush_messages(&events){
             match event {
