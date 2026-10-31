@@ -1,11 +1,7 @@
-
-
 use ash::version::DeviceV1_0;
 use ash::version::EntryV1_0;
 use ash::version::InstanceV1_0;
 use ash::vk;
-use glfw::Context;
-use glfw::Key::D;
 use glfw::ffi::glfwTerminate;
 use raw_window_handle::RawDisplayHandle;
 use raw_window_handle::RawWindowHandle;
@@ -225,6 +221,10 @@ struct SwapchainDongXi {
 }
 impl SwapchainDongXi {
     fn init(instance: &ash::Instance, physical_device: vk::PhysicalDevice, logical_device: &ash::Device, surfaces: &SurfaceDongXi, queue_families: &QueueFamilies, queues: &Queues)->Result<SwapchainDongXi, vk::Result> {
+        let extents : vk::Extent2D = vk::Extent2D::builder().
+        width(WIDTH)
+        .height(HEIGHT).build();
+        
         let surface_capabilities = surfaces.get_capabilities(physical_device)?;
         let surface_present_modes = surfaces.get_present_modes(physical_device)?;
         let surface_formats = surfaces.get_formats(physical_device)?;
@@ -236,7 +236,7 @@ impl SwapchainDongXi {
             .min_image_count(3.max(surface_capabilities.min_image_count))
             .image_format(surface_formats.first().unwrap().format)
             .image_color_space(surface_formats.first().unwrap().color_space)
-            .image_extent(surface_capabilities.current_extent)
+            .image_extent(extents)
             .image_array_layers(1)
             .image_usage(vk::ImageUsageFlags::COLOR_ATTACHMENT)
             .image_sharing_mode(vk::SharingMode::EXCLUSIVE)
@@ -259,35 +259,29 @@ impl SwapchainDongXi {
             let imageview_create_info = vk::ImageViewCreateInfo::builder()
                 .image(*img)
                 .view_type(vk::ImageViewType::TYPE_2D)
-                .format(vk::Format::B8G8R8A8_UNORM)
+                .format(vk::Format::R16G16B16A16_SFLOAT)
                 .subresource_range(*subresource_range);
             let imageview = unsafe { logical_device.create_image_view(&imageview_create_info, None)?};
             swapchain_imageviews.push(imageview);
         }
         Ok(SwapchainDongXi { swapchain_loader, swapchain, image: swapchain_images, imageviews: swapchain_imageviews })
     }
-    fn cleanup(&mut self, logical_device: &ash::Device){
+    unsafe fn cleanup(&mut self, logical_device: &ash::Device){
         for iv in &self.imageviews {
-            unsafe { logical_device.destroy_image_view(*iv, None);}
+           logical_device.destroy_image_view(*iv, None);
         }
-    }
-}
-impl Drop for SwapchainDongXi {
-    fn drop(&mut self) {
-        unsafe { 
-            self.swapchain_loader.destroy_swapchain(self.swapchain, None);
-        }
+        self.swapchain_loader.destroy_swapchain(self.swapchain, None);
     }
 }
 
 
 
-struct Renderer<'a> {
-    window: &'a glfw::PWindow,
+struct Renderer {
+    window: glfw::PWindow,
     entry: ash::Entry,
     instance: ash::Instance,
-    debug: DebugDongXi,
-    surfaces:SurfaceDongXi,
+    debug:std::mem::ManuallyDrop<DebugDongXi>,
+    surfaces:std::mem::ManuallyDrop<SurfaceDongXi>,
     physical_device: vk::PhysicalDevice,
     physical_device_properties: vk::PhysicalDeviceProperties,
     queue_families: QueueFamilies,
@@ -297,8 +291,8 @@ struct Renderer<'a> {
 }
 
 
-impl<'a> Renderer<'a> {
-    fn init(window: & 'a glfw::PWindow) -> Result<Renderer<'a>, Box<dyn std::error::Error>> {
+impl Renderer{
+    fn init(window: glfw::PWindow) -> Result<Renderer, Box<dyn std::error::Error>> {
         let entry = ash::Entry::new()?;
         let layer_names = vec!["VK_LAYER_KHRONOS_validation"];
         let instance = init_instance(&entry, &layer_names)?;
@@ -318,23 +312,25 @@ impl<'a> Renderer<'a> {
             &queue_families,
             &queues,
         )?;
-        Ok(Renderer { window, entry, instance, debug,surfaces, physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain })
+        Ok(Renderer { window, entry, instance, debug : std::mem::ManuallyDrop::new(debug),surfaces : std::mem::ManuallyDrop::new(surfaces), physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain })
     }
 
  
 }
-impl<'a> Drop for Renderer<'a> {
+impl Drop for Renderer {
     fn drop(&mut self) {
         unsafe {
             self.swapchain.cleanup(&self.device);
             self.device.destroy_device(None);
+            std::mem::ManuallyDrop::drop(&mut self.surfaces);
+            std::mem::ManuallyDrop::drop(&mut self.debug);
             self.instance.destroy_instance(None);
             
         };
     }
 }
-const WIDTH : u32 = 67;
-const HEIGHT : u32 = 68;
+const WIDTH : u32 = 600;
+const HEIGHT : u32 = 600;
 
 
 
@@ -344,19 +340,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut glfw = glfw::init(fail_on_errors!()).unwrap();
     glfw.window_hint(glfw::WindowHint::ClientApi(glfw::ClientApiHint::NoApi));
     glfw.window_hint(glfw::WindowHint::Resizable(false));
-
     let (mut window, events) = glfw.create_window(WIDTH, HEIGHT, "sideways stairs", glfw::WindowMode::Windowed).expect("errored window sory");   
-   
     window.set_key_polling(true);
-      
+    println!("Window created!");
 
-    while !window.should_close(){
-        println!("penis");
+    window.show();
+    window.focus();
+    println!("Visible: {}", window.is_visible());
+    println!("Focused: {}", window.is_focused());
+    println!("Iconified: {}", window.is_iconified());
+    let mut gubbyrenderer = Renderer::init(window).unwrap();
+    
+    while !gubbyrenderer.window.should_close(){
         glfw.poll_events();
         for(_, event) in  glfw::flush_messages(&events){
             match event {
                 glfw::WindowEvent::Key(glfw::Key::Escape, _ ,glfw::Action::Press, _) => {
-                    window.set_should_close(true);
+                    gubbyrenderer.window.set_should_close(true);
                 },
                
                 _ => {},
