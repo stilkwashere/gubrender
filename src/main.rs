@@ -8,13 +8,13 @@ use raw_window_handle::RawWindowHandle;
 use raw_window_handle::WaylandDisplayHandle;
 use raw_window_handle::WaylandWindowHandle;
 use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
-struct DebugDongXi {
+struct DebugThing {
     loader: ash::extensions::ext::DebugUtils,
     messenger: vk::DebugUtilsMessengerEXT
 }
 
-impl DebugDongXi {
-     fn init(entry: &ash::Entry, instance: &ash::Instance) -> Result<DebugDongXi, vk::Result> {
+impl DebugThing {
+     fn init(entry: &ash::Entry, instance: &ash::Instance) -> Result<DebugThing, vk::Result> {
         let mut debugcreateinfo = vk::DebugUtilsMessengerCreateInfoEXT::builder()
             .message_severity(
                 vk::DebugUtilsMessageSeverityFlagsEXT::WARNING
@@ -32,10 +32,10 @@ impl DebugDongXi {
         let loader = ash::extensions::ext::DebugUtils::new(entry, instance);
         let messenger = unsafe { loader.create_debug_utils_messenger(&debugcreateinfo, None)? };
 
-        Ok(DebugDongXi { loader, messenger })
+        Ok(DebugThing { loader, messenger })
     }
 }
-impl Drop for DebugDongXi {
+impl Drop for DebugThing {
     fn drop(&mut self){
         unsafe{
             self.loader
@@ -44,15 +44,15 @@ impl Drop for DebugDongXi {
     }
 }
 
-struct SurfaceDongXi {
+struct SurfaceThing {
     wayland_surface_loader: ash::extensions::khr::WaylandSurface,
     surface: vk::SurfaceKHR,
     surface_loader: ash::extensions::khr::Surface,
 }
 
-impl SurfaceDongXi {
+impl SurfaceThing {
 
-    fn init(window: &glfw::PWindow, entry: &ash::Entry, instance:&ash::Instance) -> Result<SurfaceDongXi, vk::Result> {
+    fn init(window: &glfw::PWindow, entry: &ash::Entry, instance:&ash::Instance) -> Result<SurfaceThing, vk::Result> {
         let display = window.display_handle().unwrap().as_raw();
         let handle = window.window_handle().unwrap().as_raw();
         let (display, surface) = match (display, handle){
@@ -66,7 +66,7 @@ impl SurfaceDongXi {
         let wl_surface_loader = ash::extensions::khr::WaylandSurface::new(entry, instance);
         let surface = unsafe { wl_surface_loader.create_wayland_surface(&wl_create_info, None)}?;
         let surface_loader = ash::extensions::khr::Surface::new(entry, instance);
-        Ok(SurfaceDongXi {wayland_surface_loader: wl_surface_loader,surface: surface,surface_loader: surface_loader})
+        Ok(SurfaceThing {wayland_surface_loader: wl_surface_loader,surface: surface,surface_loader: surface_loader})
     }
 
     fn get_capabilities(&self, physical_device: vk::PhysicalDevice) -> Result<vk::SurfaceCapabilitiesKHR, vk::Result> {
@@ -90,7 +90,7 @@ impl SurfaceDongXi {
         }
     }
 }
-impl Drop for SurfaceDongXi{
+impl Drop for SurfaceThing{
     fn drop(&mut self) {
         unsafe {
             self.surface_loader.destroy_surface(self.surface, None);
@@ -103,7 +103,7 @@ struct QueueFamilies {
     transfer_q_index : Option<u32>,
 }
 impl QueueFamilies {
-    fn init(instance: &ash::Instance, physical_device: vk::PhysicalDevice, surface: &SurfaceDongXi) -> Result<QueueFamilies, vk::Result> {
+    fn init(instance: &ash::Instance, physical_device: vk::PhysicalDevice, surface: &SurfaceThing) -> Result<QueueFamilies, vk::Result> {
         let queuefamilyproperties = unsafe { instance.get_physical_device_queue_family_properties(physical_device)};
         let mut found_graphics_q_index = None;
         let mut found_transfer_q_index = None;
@@ -213,29 +213,30 @@ fn init_phys_device_and_properties(instance: &ash::Instance) -> Result<(vk::Phys
     }
     Ok(chosen.unwrap())
 }
-struct SwapchainDongXi {
+struct SwapchainThing {
     swapchain_loader: ash::extensions::khr::Swapchain,
     swapchain : vk::SwapchainKHR,
     image: Vec<vk::Image>,
-    imageviews: Vec<vk::ImageView>
+    imageviews: Vec<vk::ImageView>,
+    framebuffers: Vec<vk::Framebuffer>,
+    surface_format: vk::SurfaceFormatKHR,
+    extent: vk::Extent2D
 }
-impl SwapchainDongXi {
-    fn init(instance: &ash::Instance, physical_device: vk::PhysicalDevice, logical_device: &ash::Device, surfaces: &SurfaceDongXi, queue_families: &QueueFamilies, queues: &Queues)->Result<SwapchainDongXi, vk::Result> {
+impl SwapchainThing {
+    fn init(instance: &ash::Instance, physical_device: vk::PhysicalDevice, logical_device: &ash::Device, surfaces: &SurfaceThing, queue_families: &QueueFamilies, queues: &Queues)->Result<SwapchainThing, vk::Result> {
         let extents : vk::Extent2D = vk::Extent2D::builder().
         width(WIDTH)
         .height(HEIGHT).build();
         
         let surface_capabilities = surfaces.get_capabilities(physical_device)?;
-        let surface_present_modes = surfaces.get_present_modes(physical_device)?;
-        let surface_formats = surfaces.get_formats(physical_device)?;
-        let queuefamilies = [queue_families.graphics_q_index.unwrap()];
-
+        let surface_present_modes = surfaces.get_present_modes(physical_device)?;        let queuefamilies = [queue_families.graphics_q_index.unwrap()];
+        let surface_format = *surfaces.get_formats(physical_device)?.first().unwrap();
         
         let swapchain_create_info = vk::SwapchainCreateInfoKHR::builder()
             .surface(surfaces.surface)
             .min_image_count(3.max(surface_capabilities.min_image_count))
-            .image_format(surface_formats.first().unwrap().format)
-            .image_color_space(surface_formats.first().unwrap().color_space)
+            .image_format(surface_format.format)
+            .image_color_space(surface_format.color_space)
             .image_extent(extents)
             .image_array_layers(1)
             .image_usage(vk::ImageUsageFlags::COLOR_ATTACHMENT)
@@ -264,9 +265,28 @@ impl SwapchainDongXi {
             let imageview = unsafe { logical_device.create_image_view(&imageview_create_info, None)?};
             swapchain_imageviews.push(imageview);
         }
-        Ok(SwapchainDongXi { swapchain_loader, swapchain, image: swapchain_images, imageviews: swapchain_imageviews })
+        Ok(SwapchainThing { swapchain_loader, swapchain, image: swapchain_images, imageviews: swapchain_imageviews, framebuffers: vec![], surface_format, extent: extents })
     }
+
+    fn create_framebuffers(&mut self, logical_device: &ash::Device, renderpass: vk::RenderPass) -> Result<(), vk::Result>{
+        for iv in &self.imageviews {
+            let iview = [*iv];
+            let framebuffer_info = vk::FramebufferCreateInfo::builder()
+                .render_pass(renderpass)
+                .attachments(&iview)
+                .width(self.extent.width)
+                .height(self.extent.height)
+                .layers(1);
+            let fb = unsafe {logical_device.create_framebuffer(&framebuffer_info, None)}?;
+            self.framebuffers.push(fb);
+        }
+        Ok(())
+    }
+
     unsafe fn cleanup(&mut self, logical_device: &ash::Device){
+        for fb in &self.framebuffers {
+            logical_device.destroy_framebuffer(*fb, None);
+        }
         for iv in &self.imageviews {
            logical_device.destroy_image_view(*iv, None);
         }
@@ -274,20 +294,62 @@ impl SwapchainDongXi {
     }
 }
 
+fn init_renderpass(logical_device: &ash::Device,
+    physical_device: vk::PhysicalDevice,
+    surfaces: &SurfaceThing,
+    ) -> Result<vk::RenderPass, vk::Result> {
+        let attachments = [vk::AttachmentDescription::builder()
+            .format(surfaces.
+                get_formats(physical_device)?
+                .first()
+                .unwrap()
+                .format,
+                )
+            .load_op(vk::AttachmentLoadOp::CLEAR)
+            .store_op(vk::AttachmentStoreOp::STORE)
+            .stencil_load_op(vk::AttachmentLoadOp::DONT_CARE)
+            .stencil_store_op(vk::AttachmentStoreOp::DONT_CARE)
+            .initial_layout(vk::ImageLayout::UNDEFINED)
+            .final_layout(vk::ImageLayout::PRESENT_SRC_KHR)
+            .samples(vk::SampleCountFlags::TYPE_1)
+            .build()];
+
+        let color_attachement_references = [vk::AttachmentReference {
+            attachment:0,
+            layout: vk::ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+        }];
+        let subpasses = [vk::SubpassDescription::builder()
+            .color_attachments(&color_attachement_references)
+            .pipeline_bind_point(vk::PipelineBindPoint::GRAPHICS).build()];
+        let subpass_dependencies = [vk::SubpassDependency::builder()
+            .src_subpass(vk::SUBPASS_EXTERNAL)
+            .src_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT)
+            .dst_subpass(0)
+            .dst_stage_mask(vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT)
+            .dst_access_mask(vk::AccessFlags::COLOR_ATTACHMENT_READ | vk::AccessFlags::COLOR_ATTACHMENT_WRITE)
+            .build()];
+        let renderpass_info = vk::RenderPassCreateInfo::builder()
+            .attachments(&attachments)
+            .subpasses(&subpasses)
+            .dependencies(&subpass_dependencies);
+        let renderpass = unsafe { logical_device.create_render_pass(&renderpass_info, None)? };
+        Ok(renderpass)
+}
 
 
 struct Renderer {
     window: glfw::PWindow,
     entry: ash::Entry,
     instance: ash::Instance,
-    debug:std::mem::ManuallyDrop<DebugDongXi>,
-    surfaces:std::mem::ManuallyDrop<SurfaceDongXi>,
+    debug:std::mem::ManuallyDrop<DebugThing>,
+    surfaces:std::mem::ManuallyDrop<SurfaceThing>,
     physical_device: vk::PhysicalDevice,
     physical_device_properties: vk::PhysicalDeviceProperties,
     queue_families: QueueFamilies,
     queues: Queues,
     device: ash::Device,
-    swapchain: SwapchainDongXi
+    swapchain: SwapchainThing,
+    renderpass : vk::RenderPass
 }
 
 
@@ -296,15 +358,15 @@ impl Renderer{
         let entry = ash::Entry::new()?;
         let layer_names = vec!["VK_LAYER_KHRONOS_validation"];
         let instance = init_instance(&entry, &layer_names)?;
-        let debug = DebugDongXi::init(&entry, &instance)?;
-        let surfaces = SurfaceDongXi::init(&window, &entry, &instance)?;
+        let debug = DebugThing::init(&entry, &instance)?;
+        let surfaces = SurfaceThing::init(&window, &entry, &instance)?;
 
         let (physical_device, physical_device_properties) = 
             init_phys_device_and_properties(&instance)?;
         let queue_families = QueueFamilies::init(&instance, physical_device, &surfaces)?;
         let (logical_device, queues) = 
             init_device_and_queues(&instance, physical_device, &queue_families, &layer_names)?;
-        let swapchain = SwapchainDongXi::init(
+        let swapchain = SwapchainThing::init(
             &instance,
             physical_device,
             &logical_device,
@@ -312,7 +374,9 @@ impl Renderer{
             &queue_families,
             &queues,
         )?;
-        Ok(Renderer { window, entry, instance, debug : std::mem::ManuallyDrop::new(debug),surfaces : std::mem::ManuallyDrop::new(surfaces), physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain })
+
+        let renderpass = init_renderpass(&logical_device, physical_device, &surfaces)?;
+        Ok(Renderer { window, entry, instance, debug : std::mem::ManuallyDrop::new(debug),surfaces : std::mem::ManuallyDrop::new(surfaces), physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain, renderpass })
     }
 
  
@@ -320,6 +384,7 @@ impl Renderer{
 impl Drop for Renderer {
     fn drop(&mut self) {
         unsafe {
+            self.device.destroy_render_pass(self.renderpass, None);
             self.swapchain.cleanup(&self.device);
             self.device.destroy_device(None);
             std::mem::ManuallyDrop::drop(&mut self.surfaces);
@@ -342,13 +407,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     glfw.window_hint(glfw::WindowHint::Resizable(false));
     let (mut window, events) = glfw.create_window(WIDTH, HEIGHT, "sideways stairs", glfw::WindowMode::Windowed).expect("errored window sory");   
     window.set_key_polling(true);
-    println!("Window created!");
-
-    window.show();
-    window.focus();
-    println!("Visible: {}", window.is_visible());
-    println!("Focused: {}", window.is_focused());
-    println!("Iconified: {}", window.is_iconified());
+ 
     let mut gubbyrenderer = Renderer::init(window).unwrap();
     
     while !gubbyrenderer.window.should_close(){
