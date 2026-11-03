@@ -1,0 +1,13 @@
+/home/stilk/Projects/gubbygaming213/target/debug/deps/net2-7378e72d8b019266.d: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/tcp.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/udp.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/socket.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/ext.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/utils.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/sys/unix/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/sys/unix/impls.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/unix.rs
+
+/home/stilk/Projects/gubbygaming213/target/debug/deps/libnet2-7378e72d8b019266.rmeta: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/tcp.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/udp.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/socket.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/ext.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/utils.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/sys/unix/mod.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/sys/unix/impls.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/unix.rs
+
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/lib.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/tcp.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/udp.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/socket.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/ext.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/utils.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/sys/unix/mod.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/sys/unix/impls.rs:
+/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/net2-0.2.39/src/unix.rs:
