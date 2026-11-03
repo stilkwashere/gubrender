@@ -1,9 +1,0 @@
-/home/stilk/Projects/gubbygaming213/target/debug/deps/glfw_sys-a45cc612114bb480.d: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/sys/manual.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/sys/pregenerated.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/../README.md /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/../glfw/include/GLFW/glfw3.h
-
-/home/stilk/Projects/gubbygaming213/target/debug/deps/libglfw_sys-a45cc612114bb480.rmeta: /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/lib.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/sys/manual.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/sys/pregenerated.rs /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/../README.md /home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/../glfw/include/GLFW/glfw3.h
-
-/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/lib.rs:
-/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/sys/manual.rs:
-/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/sys/pregenerated.rs:
-/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/../README.md:
-/home/stilk/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/glfw-sys-8.0.0/src/../glfw/include/GLFW/glfw3.h:
