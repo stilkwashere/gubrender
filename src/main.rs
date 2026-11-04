@@ -1,10 +1,12 @@
 use std::mem::swap;
+use std::result;
 
 use ash::extensions::khr::Swapchain;
 use ash::version::DeviceV1_0;
 use ash::version::EntryV1_0;
 use ash::version::InstanceV1_0;
 use ash::vk;
+use ash::vk::CommandBuffer;
 use glfw::ffi::glfwTerminate;
 use raw_window_handle::RawDisplayHandle;
 use raw_window_handle::RawWindowHandle;
@@ -223,7 +225,12 @@ struct SwapchainThing {
     imageviews: Vec<vk::ImageView>,
     framebuffers: Vec<vk::Framebuffer>,
     surface_format: vk::SurfaceFormatKHR,
-    extent: vk::Extent2D
+    extent: vk::Extent2D,
+    image_available: Vec<vk::Semaphore>,
+    rendering_finished: Vec<vk::Semaphore>,
+    may_begin_drawing: Vec<vk::Fence>,
+    amount_of_images: u32,
+    current_image: usize,
 }
 impl SwapchainThing {
     fn init(instance: &ash::Instance, physical_device: vk::PhysicalDevice, logical_device: &ash::Device, surfaces: &SurfaceThing, queue_families: &QueueFamilies, queues: &Queues)->Result<SwapchainThing, vk::Result> {
@@ -250,8 +257,8 @@ impl SwapchainThing {
             .present_mode(vk::PresentModeKHR::FIFO);
         let swapchain_loader = ash::extensions::khr::Swapchain::new(instance, logical_device);
         let swapchain = unsafe { swapchain_loader.create_swapchain(&swapchain_create_info, None)? };
-    
         let swapchain_images = unsafe { swapchain_loader.get_swapchain_images(swapchain)? };
+        let amount_of_images = swapchain_images.len() as u32;
         let mut swapchain_imageviews = Vec::with_capacity(swapchain_images.len());
         for img in &swapchain_images {
             let subresource_range = vk::ImageSubresourceRange::builder()
@@ -268,7 +275,24 @@ impl SwapchainThing {
             let imageview = unsafe { logical_device.create_image_view(&imageview_create_info, None)?};
             swapchain_imageviews.push(imageview);
         }
-        Ok(SwapchainThing { swapchain_loader, swapchain, image: swapchain_images, imageviews: swapchain_imageviews, framebuffers: vec![], surface_format, extent: extents })
+        let mut image_available = vec![];
+        let mut rendering_finished = vec![];
+        let mut may_begin_drawing = vec![];
+        let semaphoreinfo = vk::SemaphoreCreateInfo::builder();
+        let fenceinfo = vk::FenceCreateInfo::builder().flags(vk::FenceCreateFlags::SIGNALED);
+
+        for _ in 0..amount_of_images {
+            let semaphore_available = 
+                unsafe {logical_device.create_semaphore(&semaphoreinfo, None)}?;
+            let semaphore_finished =
+                unsafe {logical_device.create_semaphore(&semaphoreinfo, None)}?;
+            image_available.push(semaphore_available);
+            rendering_finished.push(semaphore_finished);
+            let fence = unsafe {logical_device.create_fence(&fenceinfo, None)}?;
+            may_begin_drawing.push(fence);
+        }
+
+        Ok(SwapchainThing { swapchain_loader, swapchain, image: swapchain_images, imageviews: swapchain_imageviews, framebuffers: vec![], surface_format, extent: extents, amount_of_images, current_image:0, image_available,rendering_finished, may_begin_drawing })
     }
 
     fn create_framebuffers(&mut self, logical_device: &ash::Device, renderpass: vk::RenderPass) -> Result<(), vk::Result>{
@@ -287,6 +311,15 @@ impl SwapchainThing {
     }
 
     unsafe fn cleanup(&mut self, logical_device: &ash::Device){
+        for fence in &self.may_begin_drawing{
+            logical_device.destroy_fence(*fence, None);
+        }
+        for semaphore in &self.image_available {
+            logical_device.destroy_semaphore(*semaphore, None);
+        }
+         for semaphore in &self.rendering_finished {
+            logical_device.destroy_semaphore(*semaphore, None);
+        }
         for fb in &self.framebuffers {
             logical_device.destroy_framebuffer(*fb, None);
         }
@@ -430,6 +463,88 @@ impl Pipeline {
         }
         Ok(Pipeline { pipeline: graphicspipeline, layout: pipelinelayout })
     }
+
+    fn cleanup(&self ,logical_device: &ash::Device){
+        unsafe {
+            logical_device.destroy_pipeline(self.pipeline, None);
+            logical_device.destroy_pipeline_layout(self.layout, None);
+        }
+    }
+}
+
+struct Pools {
+    commandpool_graphics: vk::CommandPool,
+    commandpool_transfer: vk::CommandPool
+}
+impl Pools {
+    fn init(logical_device: &ash::Device, queue_families: &QueueFamilies) -> Result<Pools, vk::Result>{
+        let graphics_command_pool_info = vk::CommandPoolCreateInfo::builder()
+            .queue_family_index(queue_families.graphics_q_index.unwrap())
+            .flags(vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER);
+        let commandpool_graphics = unsafe {logical_device.create_command_pool(&graphics_command_pool_info, None)}?;
+        let transfer_command_pool_info = vk::CommandPoolCreateInfo::builder()
+            .queue_family_index(queue_families.transfer_q_index.unwrap())
+            .flags(vk::CommandPoolCreateFlags::RESET_COMMAND_BUFFER);
+        let commandpool_transfer = unsafe {logical_device.create_command_pool(&transfer_command_pool_info, None)?};
+        Ok(Pools {commandpool_graphics, commandpool_transfer})
+    }
+   
+    unsafe fn cleanup(&self, logical_device: &ash::Device){
+        logical_device.destroy_command_pool(self.commandpool_graphics, None);
+        logical_device.destroy_command_pool(self.commandpool_transfer, None);
+    }
+
+}
+
+ fn create_commandbuffers(logical_device: &ash::Device, pools: &Pools, amount: usize) ->Result<Vec<vk::CommandBuffer>, vk::Result>{
+        let commandbuf_allocate_info = vk::CommandBufferAllocateInfo::builder()
+            .command_pool(pools.commandpool_graphics)
+            .command_buffer_count(amount as u32);
+        unsafe { logical_device.allocate_command_buffers(&commandbuf_allocate_info)}
+    }
+
+fn fill_commandbuffers(
+    commandbuffers: &[vk::CommandBuffer],
+    logical_device: &ash::Device,
+    renderpass: &vk::RenderPass,
+    swapchain: &SwapchainThing,
+    pipeline: &Pipeline,
+) -> Result<(), vk::Result> {
+    for (i, &commandbuffer) in commandbuffers.iter().enumerate() {
+        let commandbuffer_begininfo = vk::CommandBufferBeginInfo::builder();
+        unsafe {
+            logical_device.begin_command_buffer(commandbuffer, &commandbuffer_begininfo)?;
+        }
+        let clearvalues = [vk::ClearValue {
+            color: vk::ClearColorValue {
+                float32: [0.0, 0.0, 0.08, 1.0],
+            },
+        }];
+        let renderpass_begininfo = vk::RenderPassBeginInfo::builder()
+            .render_pass(*renderpass)
+            .framebuffer(swapchain.framebuffers[i])
+            .render_area(vk::Rect2D {
+                offset: vk::Offset2D { x: 0, y: 0 },
+                extent: swapchain.extent,
+            })
+            .clear_values(&clearvalues);
+        unsafe {
+            logical_device.cmd_begin_render_pass(
+                commandbuffer,
+                &renderpass_begininfo,
+                vk::SubpassContents::INLINE,
+            );
+            logical_device.cmd_bind_pipeline(
+                commandbuffer,
+                vk::PipelineBindPoint::GRAPHICS,
+                pipeline.pipeline,
+            );
+            logical_device.cmd_draw(commandbuffer, 1, 1, 0, 0);
+            logical_device.cmd_end_render_pass(commandbuffer);
+            logical_device.end_command_buffer(commandbuffer)?;
+        }
+    }
+    Ok(())
 }
 struct Renderer {
     window: glfw::PWindow,
@@ -443,7 +558,10 @@ struct Renderer {
     queues: Queues,
     device: ash::Device,
     swapchain: SwapchainThing,
-    renderpass : vk::RenderPass
+    renderpass : vk::RenderPass,
+    pipeline: Pipeline,
+    pools : Pools,
+    commandbuffs: Vec<vk::CommandBuffer>
 }
 
 
@@ -460,7 +578,7 @@ impl Renderer{
         let queue_families = QueueFamilies::init(&instance, physical_device, &surfaces)?;
         let (logical_device, queues) = 
             init_device_and_queues(&instance, physical_device, &queue_families, &layer_names)?;
-        let swapchain = SwapchainThing::init(
+        let mut swapchain = SwapchainThing::init(
             &instance,
             physical_device,
             &logical_device,
@@ -470,7 +588,14 @@ impl Renderer{
         )?;
 
         let renderpass = init_renderpass(&logical_device, physical_device, &surfaces)?;
-        Ok(Renderer { window, entry, instance, debug : std::mem::ManuallyDrop::new(debug),surfaces : std::mem::ManuallyDrop::new(surfaces), physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain, renderpass })
+        swapchain.create_framebuffers(&logical_device, renderpass)?;
+        let pipeline = Pipeline::init(&logical_device, &swapchain, &renderpass)?;
+        let pools = Pools::init(&logical_device, &queue_families)?;
+        let commandbuffers = create_commandbuffers(&logical_device, &pools, swapchain.framebuffers.len())?;
+        fill_commandbuffers(&commandbuffers, &logical_device, &renderpass, &swapchain, &pipeline)?;
+       
+      
+        Ok(Renderer { window, entry, instance, debug : std::mem::ManuallyDrop::new(debug),surfaces : std::mem::ManuallyDrop::new(surfaces), physical_device, physical_device_properties, queue_families, queues, device: logical_device, swapchain, renderpass, pipeline, pools, commandbuffs:commandbuffers})
     }
 
  
@@ -478,6 +603,10 @@ impl Renderer{
 impl Drop for Renderer {
     fn drop(&mut self) {
         unsafe {
+            self.device
+                .device_wait_idle()
+                .expect("something wrong while waiting?");
+            self.pipeline.cleanup(&self.device);
             self.device.destroy_render_pass(self.renderpass, None);
             self.swapchain.cleanup(&self.device);
             self.device.destroy_device(None);
@@ -515,8 +644,41 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 _ => {},
             }
         }
-            
-    }
+        gubbyrenderer.swapchain.current_image =
+        (gubbyrenderer.swapchain.current_image + 1) % gubbyrenderer.swapchain.amount_of_images as usize; 
+        let (image_index, _) = unsafe {
+            gubbyrenderer.swapchain.swapchain_loader.acquire_next_image(gubbyrenderer.swapchain.swapchain, std::u64::MAX, gubbyrenderer.swapchain.image_available[gubbyrenderer.swapchain.current_image], vk::Fence::null()).expect("image trouble aquisstion")
+        };
+        unsafe {
+            gubbyrenderer.device.wait_for_fences(&[gubbyrenderer.swapchain.may_begin_drawing[gubbyrenderer.swapchain.current_image]], true, std::u64::MAX).expect("waiting4fence");
+            gubbyrenderer.device.reset_fences(&[gubbyrenderer.swapchain.may_begin_drawing[gubbyrenderer.swapchain.current_image]]).expect("making fences zero again")
+        }
+        let semaphores_available = [gubbyrenderer.swapchain.image_available[gubbyrenderer.swapchain.current_image]];
+        let waiting_stages = [vk::PipelineStageFlags::COLOR_ATTACHMENT_OUTPUT];
+        let semaphores_finished = [gubbyrenderer.swapchain.rendering_finished[gubbyrenderer.swapchain.current_image]];
+        let commandbuffers = [gubbyrenderer.commandbuffs[image_index as usize]];
+        let submit_info = [vk::SubmitInfo::builder()
+                .wait_semaphores(&semaphores_available)
+                .wait_dst_stage_mask(&waiting_stages)
+                .command_buffers(&commandbuffers)
+                .signal_semaphores(&semaphores_finished)
+                .build()];
+        unsafe {
+            gubbyrenderer.device.queue_submit(gubbyrenderer.queues.graphics_queue, &submit_info, gubbyrenderer.swapchain.may_begin_drawing[gubbyrenderer.swapchain.current_image]).expect("queueeuue");
+        };
+
+        let swapchains = [gubbyrenderer.swapchain.swapchain];
+        let indices = [image_index];
+        let present_info = vk::PresentInfoKHR::builder()
+            .wait_semaphores(&semaphores_finished)
+            .swapchains(&swapchains)
+            .image_indices(&indices);
+        unsafe {
+            gubbyrenderer.swapchain.swapchain_loader
+                .queue_present(gubbyrenderer.queues.graphics_queue, &present_info)
+                .expect("presentation queue");
+        }
+    } 
     unsafe {
         glfwTerminate();
     }
